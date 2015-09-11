@@ -29,15 +29,15 @@ int main(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
-    cv::Mat img, img_gray, img_canny;
+    cv::Mat img, img_gray, img_canny, img_blur;
     img = cv::imread("photo.jpg");
     cv::Canny(img, img_canny,20,60);
     cv::cvtColor(img,img_gray,CV_RGB2GRAY);
-    cv::namedWindow( "Original Image", CV_WINDOW_AUTOSIZE );
+    cv::blur(img, img_blur,cv::Size(3,3));
     cv::imshow( "Original Image", img );
-    cv::namedWindow( "Canny Image", CV_WINDOW_AUTOSIZE );
     cv::imshow( "Canny Image", img_canny );
     cv::imshow( "Grayscale Image", img_gray );
+    cv::imshow( "Blurry Image", img_blur );
     cv::waitKey(0);
     return 0;
 }

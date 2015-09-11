@@ -1,0 +1,9 @@
+To compile the program using CMake, do the following: 
+
+$ cd <hw1_directory>
+$ cmake .
+$ make
+
+This will generate an executable which can be run by:
+
+$ ./playImages

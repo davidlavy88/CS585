@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab2 )
+find_package( OpenCV REQUIRED )
+add_executable( skinDetector main.cpp )
+target_link_libraries( skinDetector ${OpenCV_LIBS} )

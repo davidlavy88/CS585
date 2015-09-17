@@ -1,0 +1,1 @@
+/home/davicho/Documents/qt-workspace/CS585/Labs/Lab 2/CMakeFiles/skinDetector.dir

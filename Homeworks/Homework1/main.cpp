@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     img = cv::imread("photo.jpg");
     cv::Canny(img, img_canny,20,60);
     cv::cvtColor(img,img_gray,CV_RGB2GRAY);
-    cv::blur(img, img_blur,cv::Size(3,3));
+    cv::blur(img, img_blur,cv::Size(9,9));
     cv::imshow( "Original Image", img );
     cv::imshow( "Canny Image", img_canny );
     cv::imshow( "Grayscale Image", img_gray );

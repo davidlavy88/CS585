@@ -20,6 +20,7 @@ char* image_window = "Source Image";
 char* result_window = "Result window";
 
 
+//int main(int argc, char** argv)
 int main()
 {
 
@@ -60,7 +61,8 @@ int main()
     //bool bSuccess = imwrite("template4.jpg", frame0, compression_params);
 	
     //Read the different templates
-    templ = imread("hands.png", CV_32FC1);
+    templ = imread("hands.png", CV_32FC1); //CHANGE THIS VALUE FOR THE IMAGE YOU WANT
+    //templ = imread(argv[1], CV_32FC1);
     templ1 = imread("fist.png", CV_32FC1);
     templ2 = imread("thumbsup.png", CV_32FC1);
     cout << "Size of template: (" << templ.rows << "," << templ.cols << ")" << endl;
@@ -162,8 +164,35 @@ void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
 	rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
 	rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
 
+    Rect r(matchLoc,Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows));
+    Mat ROI = img_bw(r);
+
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+
+    findContours(ROI, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    //		4. Find the largest contour
+    int idx=0;
+    double max_area = 0; int max_contour_idx;
+    for( ; idx < contours.size() ; idx++ )
+    {
+        double area = contourArea(contours[idx]);
+        if (area > max_area)
+        {
+            max_area = area;
+            max_contour_idx = idx;
+        }
+    }
+    //handContour.push_back(contours[max_contour_idx]);
+    //		5. Draw the object with the largest contour as well as its outline on a new image
+    Scalar color = Scalar( 255,0, 0 );
+    Mat drawing = Mat::zeros( ROI.size(), CV_8UC3 );
+    drawContours(drawing, contours, max_contour_idx, color, 3, 8, hierarchy, 0, Point());
+    imshow("Contour image",drawing);
+
 	imshow(image_window, img_display);
-	imshow(result_window, result);
+    //imshow(result_window, result);
+    imshow("ROI", ROI);
 
 	return;
 }

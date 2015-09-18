@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 project( Lab3 )
 find_package( OpenCV REQUIRED )
-add_executable( tbd main.cpp )
-target_link_libraries( tbd ${OpenCV_LIBS} )
+add_executable( segmentHand Lab3.cpp )
+target_link_libraries( segmentHand ${OpenCV_LIBS} )

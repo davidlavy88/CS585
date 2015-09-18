@@ -172,6 +172,10 @@ void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ)
 {
     //TODO: Loop through all the elements in vec_templ and perform MatchingMethod, then
     //calculate the max value in the result matrix and compare them
+    for (vector<Mat>::iterator it = vec_templ.begin(); it!=vec_templ.end(); ++it)
+    {
+
+    }
 }
 
 

@@ -11,24 +11,23 @@ using namespace std;
 
 //function declarations
 void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ);
-void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ);
+vector<Point> MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name);
 void mySkinDetect(Mat& src, Mat& dst);
 int myMax(int a, int b, int c);
+int myMaxD(double* array, int size);
 int myMin(int a, int b, int c);
+vector<Point> myContour(Mat &src, vector < vector< Point > > &contours, string name, int &largest, vector<Vec4i> &hierarchy);
 
 char* image_window = "Source Image";
 char* result_window = "Result window";
 
+double shape_similarity[3];
 
-//int main(int argc, char** argv)
-int main()
+
+int main(int argc, char** argv)
 {
 
-	//----------------
-	//a) Reading a stream of images from a webcamera, and displaying the video
-	//----------------
-	// For more information on reading and writing video: http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html
-	// open the video camera no. 0
+    // Reading the camera
 	VideoCapture cap(0);
 
 	// if not successful, exit program
@@ -38,11 +37,10 @@ int main()
 		return -1;
 	}
 
+    //Images for the templates
     Mat templ, templ1, templ2;
-	//create a window called "MyVideoFrame0"
-	namedWindow("MyVideo0", WINDOW_AUTOSIZE);
-	Mat frame0;
 
+    /*
 	// read a new frame from video
 	bool bSuccess0 = cap.read(frame0);
 
@@ -50,42 +48,100 @@ int main()
 	if (!bSuccess0)
 	{
 		cout << "Cannot read a frame from video stream" << endl;
-	}
-
-	//show the frame in "MyVideo" window
-	imshow("MyVideo0", frame0);
-	//Save the output image
-	vector<int> compression_params;
-	compression_params.push_back(CV_IMWRITE_JPEG_QUALITY); // compression technique
-	compression_params.push_back(98); //compression quality
-    //bool bSuccess = imwrite("template4.jpg", frame0, compression_params);
+    } */
 	
     //Read the different templates
-    templ = imread("hands.png", CV_32FC1); //CHANGE THIS VALUE FOR THE IMAGE YOU WANT
-    //templ = imread(argv[1], CV_32FC1);
-    templ1 = imread("fist.png", CV_32FC1);
-    templ2 = imread("thumbsup.png", CV_32FC1);
-    cout << "Size of template: (" << templ.rows << "," << templ.cols << ")" << endl;
+    templ = imread("hands.png", CV_32FC1);
+    templ1 = imread("peace.png", CV_32FC1);
+    templ2 = imread("rock.png", CV_32FC1);
 
 
-    Mat templDest, templDest1, templDest2;
+    Mat templDest, templDest1, templDest2; //Images for skinDetection of templates (SDT)
+    vector<vector<Point> > cont, cont1, cont2; //Vector of contours
+    vector<Point> max_cont, max_cont1, max_cont2; //Maximum contour (defines the shape of the hand)
+    //Initialize the SDT's
     templDest = Mat::zeros(templ.rows, templ.cols, CV_8UC1);
     templDest1 = Mat::zeros(templ1.rows, templ1.cols, CV_8UC1);
     templDest2 = Mat::zeros(templ2.rows, templ2.cols, CV_8UC1);
+    //Perform skinDetection
     mySkinDetect(templ,templDest);
     mySkinDetect(templ1,templDest1);
     mySkinDetect(templ2,templDest2);
 
-    vector<Mat> vec_shapes;
-    vec_shapes.push_back(templDest);
-    vec_shapes.push_back(templDest1);
-    vec_shapes.push_back(templDest2);
+    vector<Vec4i> hier, hier1, hier2; //to be used in the findContour function
 
-    imshow("Open Hand Skin Detection",templDest);
-    imshow("Fist Skin Detection",templDest1);
-    imshow("Thumbs up Skin Detection",templDest2);
-    //imshow("Open Hand",templ);
+    //COPIED FROM LAB 3
+
+    //Finding contour for template 1
+    findContours(templDest, cont, hier, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    //Find the largest contour
+    int idx=0;
+    double max_area = 0; int max_contour_idx;
+    for( ; idx < cont.size() ; idx++ )
+    {
+        double area = contourArea(cont[idx]);
+        if (area > max_area)
+        {
+            max_area = area;
+            max_contour_idx = idx;
+        }
+    }
+    max_cont = cont[max_contour_idx];
+    //Draw the object with the largest contour as well as its outline on a new image
+    Scalar color = Scalar( 255,0, 0 );
+    Mat drawing = Mat::zeros( templDest.size(), CV_8UC3 );
+    drawContours(drawing, cont, max_contour_idx, color, 3, 8, hier, 0, Point());
+    imshow("Contour Template 1 ",drawing); //Show the contour of SDT 1
+
+    //Finding contour for template 2
+    findContours(templDest1, cont1, hier1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    //Find the largest contour
+    idx=0;
+    max_area = 0;
+    for( ; idx < cont1.size() ; idx++ )
+    {
+        double area = contourArea(cont1[idx]);
+        if (area > max_area)
+        {
+            max_area = area;
+            max_contour_idx = idx;
+        }
+    }
+    max_cont1 = cont1[max_contour_idx];
+    //Draw the object with the largest contour as well as its outline on a new image
+    Mat drawing1 = Mat::zeros( templDest1.size(), CV_8UC3 );
+    drawContours(drawing1, cont1, max_contour_idx, color, 3, 8, hier, 0, Point());
+    imshow("Contour Template 2 ",drawing1); //Show the contour of SDT 2
+
+    //Finding contour for template 3
+    findContours(templDest2, cont2, hier2, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    //Find the largest contour
+    idx=0;
+    max_area = 0;
+    for( ; idx < cont2.size() ; idx++ )
+    {
+        double area = contourArea(cont2[idx]);
+        if (area > max_area)
+        {
+            max_area = area;
+            max_contour_idx = idx;
+        }
+    }
+    max_cont2 = cont2[max_contour_idx];
+    //Draw the object with the largest contour as well as its outline on a new image
+    Mat drawing2 = Mat::zeros( templDest2.size(), CV_8UC3 );
+    drawContours(drawing2, cont2, max_contour_idx, color, 3, 8, hier, 0, Point());
+    imshow("Contour Template 3 ",drawing2); //Show the contour of SDT 3
+
+    //With this now we have all 3 contours called max_cont, max_cont1 and max_cont2
+
+    //Showing the Skin Detection of each template
+    //imshow("Open Hand Skin Detection",templDest);
+    //imshow("Peace Skin Detection",templDest1);
+    //imshow("Rock Skin Detection",templDest2);
 	
+    //Create 3 vector<Point> that will store the contour for the camera using matching template w the 3 templates
+    vector<Point> cam_cont, cam_cont1, cam_cont2;
 	while (1)
 	{
 		// read a new frame from video
@@ -102,15 +158,30 @@ int main()
         // destination frame
         Mat frameDest;
         frameDest = Mat::zeros(frame.rows, frame.cols, CV_8UC1); //Returns a zero array of same size as src mat, and of type CV_8UC1
-//----------------
-//	b) Skin color detection
-//----------------
+
+        //Skin Detection of the streaming
         mySkinDetect(frame, frameDest);
         imshow("MyVideo", frameDest);
 
         //Perform matching method through all the shapes
-        //DetectShape(frameDest, frame, vec_shapes);
-        MatchingMethod(frameDest,frame,templDest);
+        cam_cont = MatchingMethod(frameDest,frame,templDest,"Open Hand");
+        cam_cont1 = MatchingMethod(frameDest,frame,templDest1,"Peace");
+        cam_cont2 = MatchingMethod(frameDest,frame,templDest2,"Rock");
+
+        //Now calculate shape similarity between each correspondent template contour and camera contour
+        shape_similarity[0] = matchShapes(cam_cont, max_cont, 1, 1);
+        shape_similarity[1] = matchShapes(cam_cont1, max_cont1, 1, 1);
+        shape_similarity[2] = matchShapes(cam_cont2, max_cont2, 1, 1);
+
+        //Find the maximum value of shape similarity array
+        int max_index;
+        max_index = myMaxD(shape_similarity,3);
+
+        //Output of the program. Here you can visualize the values of the matchShapes and output what shape is recognizing
+        cout << "Coefficients: " << shape_similarity[0] << " , " << shape_similarity[1] << " , " << shape_similarity[2] << endl;
+        if (max_index == 0) cout << "OPEN HAND" << endl;
+        if (max_index == 1) cout << "PEACE" << endl;
+        if (max_index == 2) cout << "ROCK" << endl;
 
 		//wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
 		if (waitKey(30) == 27)
@@ -118,7 +189,6 @@ int main()
 			cout << "esc key is pressed by user" << endl;
 			break;
 		}
-		//imshow(image_window, templ);
 	}
 	cap.release();
 	return 0;
@@ -126,11 +196,10 @@ int main()
 
 
 
-void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
+vector<Point> MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
 {
 	/// Source image to display
 	Mat result;
-	//Mat img = imread("pen.jpg", CV_32FC1);
 	Mat img_display;
     img_color.copyTo(img_display);
     int match_method = CV_TM_CCORR_NORMED;
@@ -188,27 +257,15 @@ void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
     Scalar color = Scalar( 255,0, 0 );
     Mat drawing = Mat::zeros( ROI.size(), CV_8UC3 );
     drawContours(drawing, contours, max_contour_idx, color, 3, 8, hierarchy, 0, Point());
-    imshow("Contour image",drawing);
+    imshow(name,drawing);
 
-	imshow(image_window, img_display);
+    //imshow(image_window, img_display);
     //imshow(result_window, result);
-    imshow("ROI", ROI);
+    //imshow("ROI", ROI);
 
-	return;
+    return contours[max_contour_idx];
 }
 
-void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ)
-{
-    //TODO: Loop through all the elements in vec_templ and perform MatchingMethod, then
-    //calculate the max value in the result matrix and compare them
-    for (vector<Mat>::iterator it = vec_templ.begin(); it!=vec_templ.end(); ++it)
-    {
-
-    }
-}
-
-
-//Function that returns the maximum of 3 integers
 int myMax(int a, int b, int c) {
     int m = a;
     (void)((m < b) && (m = b));
@@ -216,7 +273,23 @@ int myMax(int a, int b, int c) {
      return m;
 }
 
-//Function that returns the minimum of 3 integers
+///Calculates the maximum index of the array
+int myMaxD(double* array, int size)
+{
+    double max = array[0];
+    int max_pos = 0;
+    int i;
+    for (i=0; i<size; i++)
+    {
+        if (max<array[i])
+        {
+            max = array[i];
+            max_pos = i;
+        }
+    }
+    return max_pos;
+}
+
 int myMin(int a, int b, int c) {
     int m = a;
     (void)((m > b) && (m = b));
@@ -258,4 +331,27 @@ void mySkinDetect(Mat& src, Mat& dst) {
         }
     }
 
+}
+
+///Returns the maximum contour
+vector<Point> myContour(Mat &src, vector < vector< Point > > &contours, string name, int &largest, vector<Vec4i> &hierarchy)
+{
+    double area;
+    double largest_area = 0;
+    largest = 0;
+    findContours(src, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+
+    Mat drawing = Mat::zeros(src.size(), CV_8UC3);
+    for (int i = 0; i < contours.size(); i++){
+        area = contourArea(contours[i], false);
+        if (area > largest_area){
+            largest = i;
+            largest_area = area;
+        }
+    }
+
+    //drawContours(src, contours, largest_contour_index, Scalar(255, 255, 255), 2, 8, hierarchy, 0, Point());
+    //imshow(name, src);
+
+    return contours[largest];
 }

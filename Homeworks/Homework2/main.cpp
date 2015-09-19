@@ -10,25 +10,24 @@ using namespace cv;
 using namespace std;
 
 //function declarations
-void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ);
-void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ);
+//void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ);
+int detectShape(vector< Mat > &src, Mat &templ1, Mat &templ2, Mat &templ3);
+Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ);
 void mySkinDetect(Mat& src, Mat& dst);
 int myMax(int a, int b, int c);
 int myMin(int a, int b, int c);
 
+vector<Point> myContour(Mat &src, vector < vector< Point > > &contours, string name);
+
 char* image_window = "Source Image";
 char* result_window = "Result window";
 
+int shape_similarity[3];
+double temp = 0;
+int max_index = 0;
 
-//int main(int argc, char** argv)
-int main()
+int main(int argc, char** argv)
 {
-
-	//----------------
-	//a) Reading a stream of images from a webcamera, and displaying the video
-	//----------------
-	// For more information on reading and writing video: http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html
-	// open the video camera no. 0
 	VideoCapture cap(0);
 
 	// if not successful, exit program
@@ -39,32 +38,12 @@ int main()
 	}
 
     Mat templ, templ1, templ2;
-	//create a window called "MyVideoFrame0"
-	namedWindow("MyVideo0", WINDOW_AUTOSIZE);
-	Mat frame0;
-
-	// read a new frame from video
-	bool bSuccess0 = cap.read(frame0);
-
-	//if not successful, break loop
-	if (!bSuccess0)
-	{
-		cout << "Cannot read a frame from video stream" << endl;
-	}
-
-	//show the frame in "MyVideo" window
-	imshow("MyVideo0", frame0);
-	//Save the output image
-	vector<int> compression_params;
-	compression_params.push_back(CV_IMWRITE_JPEG_QUALITY); // compression technique
-	compression_params.push_back(98); //compression quality
-    //bool bSuccess = imwrite("template4.jpg", frame0, compression_params);
 	
     //Read the different templates
     templ = imread("hands.png", CV_32FC1); //CHANGE THIS VALUE FOR THE IMAGE YOU WANT
     //templ = imread(argv[1], CV_32FC1);
-    templ1 = imread("fist.png", CV_32FC1);
-    templ2 = imread("thumbsup.png", CV_32FC1);
+    templ1 = imread("peace.png", CV_32FC1);
+    templ2 = imread("thumbsup2.png", CV_32FC1);
     cout << "Size of template: (" << templ.rows << "," << templ.cols << ")" << endl;
 
 
@@ -76,16 +55,19 @@ int main()
     mySkinDetect(templ1,templDest1);
     mySkinDetect(templ2,templDest2);
 
-    vector<Mat> vec_shapes;
-    vec_shapes.push_back(templDest);
-    vec_shapes.push_back(templDest1);
-    vec_shapes.push_back(templDest2);
+    erode(templDest,templDest,Mat());
+    erode(templDest1,templDest1,Mat());
+    erode(templDest2,templDest2,Mat());
 
-    imshow("Open Hand Skin Detection",templDest);
-    imshow("Fist Skin Detection",templDest1);
-    imshow("Thumbs up Skin Detection",templDest2);
-    //imshow("Open Hand",templ);
+    dilate(templDest,templDest,Mat());
+    dilate(templDest1,templDest1,Mat());
+    dilate(templDest2,templDest2,Mat());
+
+    //imshow("Open Hand Skin Detection",templDest);
+    //imshow("Fist Skin Detection",templDest1);
+    //imshow("Thumbs up Skin Detection",templDest2);
 	
+    vector< Mat > extractedROI;
 	while (1)
 	{
 		// read a new frame from video
@@ -110,7 +92,18 @@ int main()
 
         //Perform matching method through all the shapes
         //DetectShape(frameDest, frame, vec_shapes);
-        MatchingMethod(frameDest,frame,templDest);
+        Mat tt, tt1, tt2;
+        tt = MatchingMethod(frameDest,frame,templDest); extractedROI.push_back(tt);
+        tt1 = MatchingMethod(frameDest,frame,templDest1); extractedROI.push_back(tt1);
+        tt2 = MatchingMethod(frameDest,frame,templDest2); extractedROI.push_back(tt2);
+
+        imshow("TM Hand", tt);
+        imshow("TM Piece", tt1);
+        imshow("TM Thumbsup", tt2);
+
+        int what = detectShape(extractedROI, templDest, templDest1, templDest2);
+
+        //cout << what << endl;
 
 		//wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
 		if (waitKey(30) == 27)
@@ -126,7 +119,7 @@ int main()
 
 
 
-void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
+Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
 {
 	/// Source image to display
 	Mat result;
@@ -167,7 +160,7 @@ void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
     Rect r(matchLoc,Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows));
     Mat ROI = img_bw(r);
 
-    vector<vector<Point> > contours;
+    /*vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
 
     findContours(ROI, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -192,12 +185,12 @@ void MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ)
 
 	imshow(image_window, img_display);
     //imshow(result_window, result);
-    imshow("ROI", ROI);
+    //imshow("ROI", ROI);*/
 
-	return;
+    return ROI;
 }
 
-void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ)
+/*void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ)
 {
     //TODO: Loop through all the elements in vec_templ and perform MatchingMethod, then
     //calculate the max value in the result matrix and compare them
@@ -205,8 +198,7 @@ void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ)
     {
 
     }
-}
-
+}*/
 
 //Function that returns the maximum of 3 integers
 int myMax(int a, int b, int c) {
@@ -259,3 +251,60 @@ void mySkinDetect(Mat& src, Mat& dst) {
     }
 
 }
+
+vector<Point> myContour(Mat &src, vector < vector< Point > > &contours, string name)
+{
+    double area;
+    double largest_area = 0;
+    int largest_contour_index = 0;
+    vector<Vec4i> hierarchy;
+    findContours(src, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+
+    Mat drawing = Mat::zeros(src.size(), CV_8UC3);
+    for (int i = 0; i < contours.size(); i++){
+        area = contourArea(contours[i], false);
+        if (area > largest_area){
+            largest_contour_index = i;
+            largest_area = area;
+        }
+    }
+
+    drawContours(src, contours, largest_contour_index, Scalar(255, 255, 255), 2, 8, hierarchy, 0, Point());
+    imshow(name, src);
+
+    return contours[largest_contour_index];
+}
+
+int detectShape(vector<Mat> &src, Mat &templ1, Mat &templ2, Mat &templ3)
+{
+
+    vector <Mat> templ;
+    templ.push_back(templ1);
+    templ.push_back(templ2);
+    templ.push_back(templ3);
+
+    vector<vector<Point> > src_contours, templ_contours;
+
+
+    int method = 1;
+    vector<Point> contour_src, contour_templ;
+
+    for (int j = 0; j < templ.size(); j++)
+    {
+
+        //Find all contours in the thresholded image
+        contour_src = myContour(src[j],src_contours, "Source Contour");
+        contour_templ = myContour(templ[j], templ_contours, "Template contour");
+        //cout << "Hello" << endl;
+        shape_similarity[j]=matchShapes(contour_src, contour_templ, method,1);
+        cout << "Hello" << endl;
+        if (shape_similarity[j]>temp){
+            max_index = j;
+            temp = shape_similarity[j];
+        }
+        return max_index;
+    }
+}
+
+
+

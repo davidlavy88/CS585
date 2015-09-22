@@ -11,7 +11,7 @@ using namespace std;
 
 //function declarations
 void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ);
-vector<Point> MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name);
+Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name);
 void mySkinDetect(Mat& src, Mat& dst);
 int myMax(int a, int b, int c);
 int myMaxD(double* array, int size);
@@ -28,34 +28,23 @@ double shape_similarity[3];
 
 int main(int argc, char** argv)
 {
-
     // Reading the camera
-	VideoCapture cap(0);
+    VideoCapture cap(0);
 
-	// if not successful, exit program
-	if (!cap.isOpened())
-	{
-		cout << "Cannot open the video cam" << endl;
-		return -1;
-	}
+    // if not successful, exit program
+    if (!cap.isOpened())
+    {
+        cout << "Cannot open the video cam" << endl;
+        return -1;
+    }
 
     //Images for the templates
     Mat templ, templ1, templ2;
 
-    /*
-	// read a new frame from video
-	bool bSuccess0 = cap.read(frame0);
-
-	//if not successful, break loop
-	if (!bSuccess0)
-	{
-		cout << "Cannot read a frame from video stream" << endl;
-    } */
-	
     //Read the different templates
-    templ = imread("hands.png", CV_32FC1);
-    templ1 = imread("peace.png", CV_32FC1);
-    templ2 = imread("rock.png", CV_32FC1);
+    templ = imread("openhand2.png", CV_32FC1);
+    templ1 = imread("rock2.png", CV_32FC1);
+    templ2 = imread("up2.png", CV_32FC1);
 
 
     Mat templDest, templDest1, templDest2; //Images for skinDetection of templates (SDT)
@@ -69,6 +58,14 @@ int main(int argc, char** argv)
     mySkinDetect(templ,templDest);
     mySkinDetect(templ1,templDest1);
     mySkinDetect(templ2,templDest2);
+
+    erode(templDest,templDest,Mat());
+    erode(templDest1,templDest1,Mat());
+    erode(templDest2,templDest2,Mat());
+
+    dilate(templDest,templDest,Mat());
+    dilate(templDest1,templDest1,Mat());
+    dilate(templDest2,templDest2,Mat());
 
     vector<Vec4i> hier, hier1, hier2; //to be used in the findContour function
 
@@ -90,10 +87,14 @@ int main(int argc, char** argv)
     }
     max_cont = cont[max_contour_idx];
     //Draw the object with the largest contour as well as its outline on a new image
-    Scalar color = Scalar( 255,0, 0 );
-    Mat drawing = Mat::zeros( templDest.size(), CV_8UC3 );
-    drawContours(drawing, cont, max_contour_idx, color, 3, 8, hier, 0, Point());
+    Scalar color = Scalar( 255,255, 255 );
+    Mat drawing = Mat::zeros( templDest.size(), CV_8UC1 ); //changed from 8UC3 to 8UC1
+    drawContours(drawing, cont, max_contour_idx, color, -3, 8, hier, 0, Point());
     imshow("Contour Template 1 ",drawing); //Show the contour of SDT 1
+
+    Rect r = boundingRect(max_cont);
+    Mat nuvo = drawing(r);
+    imshow("Bbox 1",nuvo);
 
     //Finding contour for template 2
     findContours(templDest1, cont1, hier1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -111,9 +112,13 @@ int main(int argc, char** argv)
     }
     max_cont1 = cont1[max_contour_idx];
     //Draw the object with the largest contour as well as its outline on a new image
-    Mat drawing1 = Mat::zeros( templDest1.size(), CV_8UC3 );
-    drawContours(drawing1, cont1, max_contour_idx, color, 3, 8, hier, 0, Point());
+    Mat drawing1 = Mat::zeros( templDest1.size(), CV_8UC1 );
+    drawContours(drawing1, cont1, max_contour_idx, color, -3, 8, hier, 0, Point());
     imshow("Contour Template 2 ",drawing1); //Show the contour of SDT 2
+
+    Rect r1 = boundingRect(max_cont1);
+    Mat nuvo1 = drawing1(r1);
+    imshow("Bbox 2",nuvo1);
 
     //Finding contour for template 3
     findContours(templDest2, cont2, hier2, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -131,31 +136,34 @@ int main(int argc, char** argv)
     }
     max_cont2 = cont2[max_contour_idx];
     //Draw the object with the largest contour as well as its outline on a new image
-    Mat drawing2 = Mat::zeros( templDest2.size(), CV_8UC3 );
-    drawContours(drawing2, cont2, max_contour_idx, color, 3, 8, hier, 0, Point());
+    Mat drawing2 = Mat::zeros( templDest2.size(), CV_8UC1 );
+    drawContours(drawing2, cont2, max_contour_idx, color, -3, 8, hier, 0, Point());
     imshow("Contour Template 3 ",drawing2); //Show the contour of SDT 3
+
+    Rect r2 = boundingRect(max_cont2);
+    Mat nuvo2 = drawing2(r2);
+    imshow("Bbox 3",nuvo2);
 
     //With this now we have all 3 contours called max_cont, max_cont1 and max_cont2
 
-    //Showing the Skin Detection of each template
-    //imshow("Open Hand Skin Detection",templDest);
-    //imshow("Peace Skin Detection",templDest1);
-    //imshow("Rock Skin Detection",templDest2);
-	
-    //Create 3 vector<Point> that will store the contour for the camera using matching template w the 3 templates
-    vector<Point> cam_cont, cam_cont1, cam_cont2;
-	while (1)
-	{
-		// read a new frame from video
-		Mat frame;
-		bool bSuccess = cap.read(frame);
+    //Testing with a random pic
 
-		//if not successful, break loop
-		if (!bSuccess)
-		{
-			cout << "Cannot read a frame from video stream" << endl;
-			break;
-		}
+    //Create 3 vector<Point> that will store the contour for the camera using matching template w the 3 templates
+    //vector<Point> cam_cont, cam_cont1, cam_cont2;
+    Mat cam_cont, cam_cont1, cam_cont2;
+
+    while (1)
+    {
+        // read a new frame from video
+        Mat frame;
+        bool bSuccess = cap.read(frame);
+
+        //if not successful, break loop
+        if (!bSuccess)
+        {
+            cout << "Cannot read a frame from video stream" << endl;
+            break;
+        }
 
         // destination frame
         Mat frameDest;
@@ -163,6 +171,8 @@ int main(int argc, char** argv)
 
         //Skin Detection of the streaming
         mySkinDetect(frame, frameDest);
+        erode(frameDest,frameDest,Mat());
+        dilate(frameDest,frameDest,Mat());
         imshow("MyVideo", frameDest);
 
         //Perform matching method through all the shapes
@@ -170,73 +180,64 @@ int main(int argc, char** argv)
         cam_cont1 = MatchingMethod(frameDest,frame,templDest1,"Peace");
         cam_cont2 = MatchingMethod(frameDest,frame,templDest2,"Rock");
 
-        //Now calculate shape similarity between each correspondent template contour and camera contour
-        shape_similarity[0] = matchShapes(cam_cont, max_cont, 1, 1);
-        shape_similarity[1] = matchShapes(cam_cont1, max_cont1, 1, 1);
-        shape_similarity[2] = matchShapes(cam_cont2, max_cont2, 1, 1);
 
-        //Find the maximum value of shape similarity array
-        int max_index;
-        max_index = myMaxD(shape_similarity,3);
-
-        //Output of the program. Here you can visualize the values of the matchShapes and output what shape is recognizing
-        cout << "Coefficients: " << shape_similarity[0] << " , " << shape_similarity[1] << " , " << shape_similarity[2] << endl;
-        if (max_index == 0) cout << "OPEN HAND" << endl;
-        if (max_index == 1) cout << "PEACE" << endl;
-        if (max_index == 2) cout << "ROCK" << endl;
-
-		//wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
-		if (waitKey(30) == 27)
-		{
-			cout << "esc key is pressed by user" << endl;
-			break;
-		}
-	}
-	cap.release();
-	return 0;
+        //wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
+        if (waitKey(30) == 27)
+        {
+            cout << "esc key is pressed by user" << endl;
+            break;
+        }
+    }
+    cap.release();
+    // Wait until keypress
+    waitKey(0);
+    return(0);
 }
 
 
 
-vector<Point> MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
+Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
 {
-	/// Source image to display
-	Mat result;
-	Mat img_display;
+    /// Source image to display
+    Mat result;
+    Mat img_display;
     img_color.copyTo(img_display);
     int match_method = CV_TM_CCORR_NORMED;
-	/// Create the result matrix
+    /// Create the result matrix
     int result_cols = img_bw.cols - templ.cols + 1;
     int result_rows = img_bw.rows - templ.rows + 1;
 
-	result.create(result_cols, result_rows, CV_32FC1);
+    result.create(result_cols, result_rows, CV_32FC1);
 
-	/// Do the Matching and Normalize
+    /// Do the Matching and Normalize
     matchTemplate(img_bw, templ, result, match_method);
-	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+    normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
 
-	/// Localizing the best match with minMaxLoc
-	double minVal; double maxVal; Point minLoc; Point maxLoc;
-	Point matchLoc;
+    /// Localizing the best match with minMaxLoc
+    double minVal; double maxVal; Point minLoc; Point maxLoc;
+    Point matchLoc;
 
-	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+    minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
 
-	/// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
-	if (match_method == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED)
-	{
-		matchLoc = minLoc;
-	}
-	else
-	{
-		matchLoc = maxLoc;
-	}
+    /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
+    if (match_method == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED)
+    {
+        matchLoc = minLoc;
+    }
+    else
+    {
+        matchLoc = maxLoc;
+    }
 
-	/// Show me what you got
-	rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
-	rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+    /// Show me what you got
+    rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+    rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+    //imshow(name, img_display);
 
     Rect r(matchLoc,Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows));
+    //Mat ROI = img_bw(r);
     Mat ROI = img_bw(r);
+    Mat ROI2 = img_color(r);
 
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
@@ -254,18 +255,28 @@ vector<Point> MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string nam
             max_contour_idx = idx;
         }
     }
-    //handContour.push_back(contours[max_contour_idx]);
+    Rect rr = boundingRect(contours[max_contour_idx]);
+    Mat nn = ROI2(rr);
+
+    Mat res_nn;
+    resize(nn,res_nn,templ.size());
     //		5. Draw the object with the largest contour as well as its outline on a new image
-    Scalar color = Scalar( 255,0, 0 );
-    Mat drawing = Mat::zeros( ROI.size(), CV_8UC3 );
-    drawContours(drawing, contours, max_contour_idx, color, 3, 8, hierarchy, 0, Point());
+    Scalar color = Scalar( 255, 255, 255 );
+    Mat drawing = Mat::zeros( ROI.size(), CV_8UC1 );
+    drawContours(drawing, contours, max_contour_idx, color, -3, 8, hierarchy, 0, Point());
+    //drawContours(ROI, contours, max_contour_idx, color, 3, 8, hierarchy, 0, Point());
     imshow(name,drawing);
 
+    //imshow(name,res_nn);
+    cout << max_contour_idx << endl; //THIS NUMBER IS WAAAY TO HIGH WHEN initiazling camera
+
     //imshow(image_window, img_display);
+    //imshow(name, ROI2);
     //imshow(result_window, result);
     //imshow("ROI", ROI);
 
-    return contours[max_contour_idx];
+    //return contours[max_contour_idx];
+    return ROI;
 }
 
 int myMax(int a, int b, int c) {
@@ -301,39 +312,7 @@ int myMin(int a, int b, int c) {
 
 //Function that detects whether a pixel belongs to the skin based on RGB values
 void mySkinDetect(Mat& src, Mat& dst) {
-    //Surveys of skin color modeling and detection techniques:
-    //Vezhnevets, Vladimir, Vassili Sazonov, and Alla Andreeva. "A survey on pixel-based skin color detection techniques." Proc. Graphicon. Vol. 3. 2003.
-    //Kakumanu, Praveen, Sokratis Makrogiannis, and Nikolaos Bourbakis. "A survey of skin-color modeling and detection methods." Pattern recognition 40.3 (2007): 1106-1122.
-
-    //TODO:
-    //Use the following test for skin color detection
-    //Red > 95 and Blue > 20 and Green > 40, and
-    //max(Red, Green, Blue) - min(Red, Green, Blue) > 15, and
-    //abs(Red - Green) > 15, and
-    //Red > Green, and
-    //Red > Blue
-    //cv::Mat* BGRchannels;
-    /*Vec3b intensity;
-    uchar blue, green, red;
-    //cv::split(src,BGRchannels);
-    //cout << BGRchannels[0].at<uchar>(3,2) << endl;
-    for (int i=0;i<src.rows;i++)
-    {
-        for (int j=0;j<src.cols;j++)
-        {
-            intensity = src.at<Vec3b>(i,j);
-            blue = intensity.val[0];
-            green = intensity.val[1];
-            red = intensity.val[2];
-            if (blue>20 && green>40 && red>95 && (myMax((int)blue,(int)green,(int)red)-myMin((int)blue,(int)green,(int)red)>15) && abs(red-green) && red>green && red>blue)
-            {
-                dst.at<uchar>(i,j) = 255;
-            }
-            else dst.at<uchar>(i,j) = 0;
-        }
-    }*/
     inRange(src, Scalar(bmin,gmin,rmin), Scalar(bmax,gmax,rmax), dst);
-
 }
 
 ///Returns the maximum contour

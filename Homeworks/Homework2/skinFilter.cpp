@@ -24,13 +24,13 @@ int main(int argc, char** argv)
     createTrackbar("Red high", "Skin filter values", &rmax, 255);
     Mat output;
     Mat image;
-    image = imread(argv[1],1);
-    imshow("input", image);
-    //VideoCapture cap(0);
+    //image = imread(argv[1],1);
+    //imshow("input", image);
+    VideoCapture cap(0);
     while(1)
     {
-        //cap.read(image);
-        //imshow("input", image);
+        cap.read(image);
+        imshow("input", image);
         inRange(image, Scalar(bmin,gmin,rmin), Scalar(bmax,gmax,rmax), output);
 
         imshow("Result Window", output);
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
             break;
         }
     }
-    //cap.release();
+    cap.release();
     image.release();
     return 0;
 }

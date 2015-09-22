@@ -21,6 +21,8 @@ vector<Point> myContour(Mat &src, vector < vector< Point > > &contours, string n
 char* image_window = "Source Image";
 char* result_window = "Result window";
 
+int rmin=45, rmax=192, bmin=18, bmax=147, gmin=76, gmax=151;
+
 double shape_similarity[3];
 
 
@@ -30,9 +32,9 @@ int main(int argc, char** argv)
     Mat templ, templ1, templ2;
 
     //Read the different templates
-    templ = imread("hands.png", CV_32FC1);
-    templ1 = imread("peace.png", CV_32FC1);
-    templ2 = imread("rock.png", CV_32FC1);
+    templ = imread("openhand1.png", CV_32FC1);
+    templ1 = imread("peace1.png", CV_32FC1);
+    templ2 = imread("right1.png", CV_32FC1);
 
 
     Mat templDest, templDest1, templDest2; //Images for skinDetection of templates (SDT)
@@ -76,7 +78,7 @@ int main(int argc, char** argv)
     max_cont = cont[max_contour_idx];
     //Draw the object with the largest contour as well as its outline on a new image
     Scalar color = Scalar( 255,255, 255 );
-    Mat drawing = Mat::zeros( templDest.size(), CV_8UC3 );
+    Mat drawing = Mat::zeros( templDest.size(), CV_8UC1 ); //changed from 8UC3 to 8UC1
     drawContours(drawing, cont, max_contour_idx, color, -3, 8, hier, 0, Point());
     imshow("Contour Template 1 ",drawing); //Show the contour of SDT 1
 
@@ -100,7 +102,7 @@ int main(int argc, char** argv)
     }
     max_cont1 = cont1[max_contour_idx];
     //Draw the object with the largest contour as well as its outline on a new image
-    Mat drawing1 = Mat::zeros( templDest1.size(), CV_8UC3 );
+    Mat drawing1 = Mat::zeros( templDest1.size(), CV_8UC1 );
     drawContours(drawing1, cont1, max_contour_idx, color, -3, 8, hier, 0, Point());
     imshow("Contour Template 2 ",drawing1); //Show the contour of SDT 2
 
@@ -124,7 +126,7 @@ int main(int argc, char** argv)
     }
     max_cont2 = cont2[max_contour_idx];
     //Draw the object with the largest contour as well as its outline on a new image
-    Mat drawing2 = Mat::zeros( templDest2.size(), CV_8UC3 );
+    Mat drawing2 = Mat::zeros( templDest2.size(), CV_8UC1 );
     drawContours(drawing2, cont2, max_contour_idx, color, -3, 8, hier, 0, Point());
     imshow("Contour Template 3 ",drawing2); //Show the contour of SDT 3
 
@@ -140,10 +142,12 @@ int main(int argc, char** argv)
     //vector<Point> cam_cont, cam_cont1, cam_cont2;
     Mat cam_cont, cam_cont1, cam_cont2;
 
-    Mat test = imread("search_test.jpg");
+    Mat test = imread("test_right.jpg");
     Mat templtest = Mat::zeros(test.rows, test.cols, CV_8UC1);
     //Perform skinDetection
     mySkinDetect(test,templtest);
+    erode(templtest,templtest,Mat());
+    dilate(templtest,templtest,Mat());
 
     //Perform matching method through all the shapes
     //cam_cont = MatchingMethod(templtest,test,templDest,"Open Hand"); //Original function w full size template
@@ -207,6 +211,7 @@ Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
     /// Show me what you got
     rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
     rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+    imshow(name, img_display);
 
     Rect r(matchLoc,Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows));
     //Mat ROI = img_bw(r);
@@ -235,12 +240,13 @@ Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
     Mat res_nn;
     resize(nn,res_nn,templ.size());
     //		5. Draw the object with the largest contour as well as its outline on a new image
-    Scalar color = Scalar( 255,0, 0 );
-    Mat drawing = Mat::zeros( ROI.size(), CV_8UC3 );
-    drawContours(drawing, contours, max_contour_idx, color, 3, 8, hierarchy, 0, Point());
+    Scalar color = Scalar( 255, 255, 255 );
+    Mat drawing = Mat::zeros( ROI.size(), CV_8UC1 );
+    drawContours(drawing, contours, max_contour_idx, color, -3, 8, hierarchy, 0, Point());
     //drawContours(ROI, contours, max_contour_idx, color, 3, 8, hierarchy, 0, Point());
     //imshow(name,drawing);
-    imshow(name,res_nn);
+
+    //imshow(name,res_nn);
     cout << max_contour_idx << endl; //THIS NUMBER IS WAAAY TO HIGH WHEN initiazling camera
 
     //imshow(image_window, img_display);
@@ -285,7 +291,6 @@ int myMin(int a, int b, int c) {
 
 //Function that detects whether a pixel belongs to the skin based on RGB values
 void mySkinDetect(Mat& src, Mat& dst) {
-    int rmin=45, rmax=193, bmin=12, bmax=135, gmin=21, gmax=145;
     inRange(src, Scalar(bmin,gmin,rmin), Scalar(bmax,gmax,rmax), dst);
 }
 

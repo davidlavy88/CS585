@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab5 )
+find_package( OpenCV REQUIRED )
+add_executable( segmentation Lab5.cpp )
+target_link_libraries( segmentation ${OpenCV_LIBS} )

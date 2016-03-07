@@ -1,1 +1,0 @@
-/home/davicho/Documents/qt-workspace/CS585/Homeworks/Homework2/CMakeFiles/handShape.dir

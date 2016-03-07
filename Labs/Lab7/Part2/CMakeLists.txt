@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab7 )
+find_package( OpenCV REQUIRED )
+add_executable( Lab7_Part2 Lab7_Part2.cpp )
+add_executable( kalmanFilter kalman.cpp )
+target_link_libraries( Lab7_Part2 ${OpenCV_LIBS} )
+target_link_libraries( kalmanFilter ${OpenCV_LIBS} )

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab11 )
+find_package( OpenCV REQUIRED )
+add_executable( imageMosaics Lab11.cpp )
+target_link_libraries( imageMosaics ${OpenCV_LIBS} )

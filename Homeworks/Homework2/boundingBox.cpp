@@ -11,7 +11,7 @@ using namespace std;
 
 //function declarations
 void DetectShape(Mat &img_bw, Mat &img_color, vector<Mat> &vec_templ);
-Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name);
+Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name, double &mmax, int flag);
 void mySkinDetect(Mat& src, Mat& dst);
 int myMax(int a, int b, int c);
 int myMaxD(double* array, int size);
@@ -21,20 +21,24 @@ vector<Point> myContour(Mat &src, vector < vector< Point > > &contours, string n
 char* image_window = "Source Image";
 char* result_window = "Result window";
 
-int rmin=45, rmax=192, bmin=18, bmax=147, gmin=76, gmax=151;
-
-double shape_similarity[3];
+//int rmin=45, rmax=192, bmin=18, bmax=147, gmin=76, gmax=151;
+int hmin=25, hmax=115, smin=40, smax=170, vmin=83, vmax=245;
 
 
 int main(int argc, char** argv)
 {
     //Images for the templates
     Mat templ, templ1, templ2;
+    Mat templ_hsv, templ1_hsv, templ2_hsv;
 
     //Read the different templates
-    templ = imread("openhand1.png", CV_32FC1);
-    templ1 = imread("peace1.png", CV_32FC1);
-    templ2 = imread("right1.png", CV_32FC1);
+    templ = imread("openhand2.png", CV_32FC1);
+    templ1 = imread("peace2.png", CV_32FC1);
+    templ2 = imread("up2.png", CV_32FC1);
+
+    cvtColor(templ,templ_hsv, CV_RGB2HSV);
+    cvtColor(templ1,templ1_hsv, CV_RGB2HSV);
+    cvtColor(templ2,templ2_hsv, CV_RGB2HSV);
 
 
     Mat templDest, templDest1, templDest2; //Images for skinDetection of templates (SDT)
@@ -45,9 +49,9 @@ int main(int argc, char** argv)
     templDest1 = Mat::zeros(templ1.rows, templ1.cols, CV_8UC1);
     templDest2 = Mat::zeros(templ2.rows, templ2.cols, CV_8UC1);
     //Perform skinDetection
-    mySkinDetect(templ,templDest);
-    mySkinDetect(templ1,templDest1);
-    mySkinDetect(templ2,templDest2);
+    mySkinDetect(templ_hsv,templDest);
+    mySkinDetect(templ1_hsv,templDest1);
+    mySkinDetect(templ2_hsv,templDest2);
 
     erode(templDest,templDest,Mat());
     erode(templDest1,templDest1,Mat());
@@ -142,10 +146,58 @@ int main(int argc, char** argv)
     //vector<Point> cam_cont, cam_cont1, cam_cont2;
     Mat cam_cont, cam_cont1, cam_cont2;
 
-    Mat test = imread("test_right.jpg");
+    VideoCapture cap(argv[1]);
+    //cap.set(CV_CAP_PROP_POS_MSEC, 40000);
+    Mat match, match1, match2;
+    double mmax, mmax1, mmax2;
+    match.create( 1, 1, CV_32FC1 );
+    match1.create( 1, 1, CV_32FC1 );
+    match2.create( 1, 1, CV_32FC1 );
+    while (1)
+    {
+        // read a new frame from video
+        Mat frame, frame_hsv;
+        bool bSuccess = cap.read(frame);
+        cvtColor(frame,frame_hsv, CV_RGB2HSV);
+
+        // destination frame
+        Mat frameDest;
+        frameDest = Mat::zeros(frame.rows, frame.cols, CV_8UC1); //Returns a zero array of same size as src mat, and of type CV_8UC1
+
+        //Skin Detection of the streaming
+        mySkinDetect(frame_hsv, frameDest);
+        imshow("MyVideo", frameDest);
+
+        //Perform matching method through all the shapes
+        cam_cont = MatchingMethod(frameDest,frame,templDest,"Open Hand",mmax,1);
+        cam_cont1 = MatchingMethod(frameDest,frame,templDest1,"Peace", mmax1,2);
+        cam_cont2 = MatchingMethod(frameDest,frame,templDest2,"Up", mmax2,3);
+
+        cout << "Open Hand: " << mmax << "; Peace: " << mmax1 << "; Up: " << mmax2 << endl;
+
+        /// Do the Matching and Normalize
+        /*matchTemplate( cam_cont2, drawing2, match, CV_TM_CCORR_NORMED );
+        normalize( match, match, 0, 1, NORM_MINMAX, -1, Mat() );
+
+        double mmax = match.at<double>(0,0);
+        cout << mmax << endl;*/
+
+        //wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
+        if (waitKey(30) == 27)
+        {
+            cout << "esc key is pressed by user" << endl;
+            break;
+        }
+    }
+    cap.release();
+
+    /*Mat test, test_hsv;
+    test = imread("test_openhand.jpg");
+    cvtColor(test,test_hsv, CV_RGB2HSV);
+
     Mat templtest = Mat::zeros(test.rows, test.cols, CV_8UC1);
     //Perform skinDetection
-    mySkinDetect(test,templtest);
+    mySkinDetect(test_hsv,templtest);
     erode(templtest,templtest,Mat());
     dilate(templtest,templtest,Mat());
 
@@ -153,7 +205,7 @@ int main(int argc, char** argv)
     //cam_cont = MatchingMethod(templtest,test,templDest,"Open Hand"); //Original function w full size template
     cam_cont = MatchingMethod(templtest,test,templDest,"Open Hand");
     cam_cont1 = MatchingMethod(templtest,test,templDest1,"Peace");
-    cam_cont2 = MatchingMethod(templtest,test,templDest2,"Rock");
+    cam_cont2 = MatchingMethod(templtest,test,templDest2,"Up");*/
 
     /*Rect cr = boundingRect(cam_cont); Rect cr1 = boundingRect(cam_cont1); Rect cr2 = boundingRect(cam_cont2);
     Mat btest = templtest(cr); Mat btest1 = templtest(cr1); Mat btest2 = templtest(cr2);
@@ -169,13 +221,15 @@ int main(int argc, char** argv)
     //Perform template matching once again
 
     // Wait until keypress
-    waitKey(0);
+
+    //waitKey(0);
+
     return(0);
 }
 
 
 
-Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
+Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name, double &mmax, int flag)
 {
     /// Source image to display
     Mat result;
@@ -208,17 +262,21 @@ Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
         matchLoc = maxLoc;
     }
 
+    //cout << result.at<double>(matchLoc.y,matchLoc.x) << endl;
+    mmax = result.at<double>(matchLoc.y,matchLoc.x);
+
     /// Show me what you got
     rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
     rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
-    imshow(name, img_display);
+    if (flag==1) imshow(name, img_display);
 
     Rect r(matchLoc,Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows));
     //Mat ROI = img_bw(r);
     Mat ROI = img_bw(r);
     Mat ROI2 = img_color(r);
+    //imshow(name, ROI);
 
-    vector<vector<Point> > contours;
+    /*vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
 
     findContours(ROI, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -247,7 +305,7 @@ Mat MatchingMethod(Mat &img_bw, Mat &img_color, Mat &templ, string name)
     //imshow(name,drawing);
 
     //imshow(name,res_nn);
-    cout << max_contour_idx << endl; //THIS NUMBER IS WAAAY TO HIGH WHEN initiazling camera
+    cout << max_contour_idx << endl; //THIS NUMBER IS WAAAY TO HIGH WHEN initiazling camera*/
 
     //imshow(image_window, img_display);
     //imshow(name, ROI2);
@@ -291,7 +349,7 @@ int myMin(int a, int b, int c) {
 
 //Function that detects whether a pixel belongs to the skin based on RGB values
 void mySkinDetect(Mat& src, Mat& dst) {
-    inRange(src, Scalar(bmin,gmin,rmin), Scalar(bmax,gmax,rmax), dst);
+    inRange(src, Scalar(hmin,smin,vmin), Scalar(hmax,smax,vmax), dst);
 }
 
 ///Returns the maximum contour

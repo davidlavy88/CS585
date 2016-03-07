@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab6 )
+find_package( OpenCV REQUIRED )
+add_executable( ab_kf Lab6.cpp )
+target_link_libraries( ab_kf ${OpenCV_LIBS} )

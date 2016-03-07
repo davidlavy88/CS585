@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab4 )
+find_package( OpenCV REQUIRED )
+add_executable( connectedComp Lab4.cpp )
+target_link_libraries( connectedComp ${OpenCV_LIBS} )

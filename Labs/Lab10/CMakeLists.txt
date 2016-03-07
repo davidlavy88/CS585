@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab10 )
+find_package( OpenCV REQUIRED )
+add_executable( featExtrDet Lab10.cpp )
+target_link_libraries( featExtrDet ${OpenCV_LIBS} )

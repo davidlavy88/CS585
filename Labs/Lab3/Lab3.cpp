@@ -1,7 +1,5 @@
 /**
 	CS585_Lab3.cpp
-	@author: Ajjen Joshi
-	@version: 1.0 9/17/2014
 
 	CS585 Image and Video Computing Fall 2014
 	Lab 3

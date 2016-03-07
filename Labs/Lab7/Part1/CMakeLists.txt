@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab7 )
+find_package( OpenCV REQUIRED )
+add_executable( Lab7_Part1 Lab7_Part1.cpp )
+target_link_libraries( Lab7_Part1 ${OpenCV_LIBS} )

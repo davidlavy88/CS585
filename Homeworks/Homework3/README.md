@@ -1,8 +1,6 @@
 <p style="font-size: 120%;"><b>Problem definition</b></p>  
 
-<p>
-    Detecting and analysing objects is an important part of computer vision. We set out to detect certain objects in videos, detect connected components, lower the number of components, and perform statistics on these components. We did this for 3 sets of videos: an aquarium, cells, and bats.
-    </p>
+<p>Detecting and analysing objects is an important part of computer vision. We set out to detect certain objects in videos, detect connected components, lower the number of components, and perform statistics on these components. We did this for 3 sets of videos: an aquarium, cells, and bats.</p>
     <ul>
      <li>Challenges</li>
      <ul>
@@ -21,6 +19,7 @@
    </ul>
     
     <hr>
+    
     <h2> Method and Implementation </h2>
 
 <p>For all data sets, we used two segmentation methods: iterative threshold and adaptive threshold. We implemented our own connected components algorithm quasi-recursively using a stack.  After all this we tailored each program to the dataset. For the aquarium, we didn't change the output (see discussion for explanation). For the bat dataset, we eroded to reduce single-pixel objects. For cells, we ran into an interesting problem; cells were being broken into many small components. To fix this, we dialted several times to fuse these components into one object, then eroded to approximate the cell.

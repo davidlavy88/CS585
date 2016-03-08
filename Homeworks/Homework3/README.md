@@ -1,4 +1,4 @@
-<p style="font-size: 120%;"><b>Problem definition</b></p>  
+<h2>Problem definition</h2>
 
 <p>Detecting and analysing objects is an important part of computer vision. We set out to detect certain objects in videos, detect connected components, lower the number of components, and perform statistics on these components. We did this for 3 sets of videos: an aquarium, cells, and bats.</p>
 <ul>

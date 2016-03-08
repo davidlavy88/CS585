@@ -53,10 +53,14 @@ Our initial experiment involved tracking the bats with greedy/alpha-beta, follow
 alt="Original Bats" width="240" height="180" border="10" /></a>
         </div></td>
         <td><div align="center">
-<iframe width="420" height="315" src="https://www.youtube.com/embed/6lQ9wC0grC0" frameborder="0" allowfullscreen></iframe>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=6lQ9wC0grC0
+" target="_blank"><img src="http://img.youtube.com/vi/6lQ9wC0grC0/0.jpg" 
+alt="Bats- AB Filter & Greedy Algorithm" width="240" height="180" border="10" /></a>
         </div></td>
         <td><div align="center">
-<iframe width="420" height="315" src="https://www.youtube.com/embed/w9mQGjM5TmI" frameborder="0" allowfullscreen></iframe>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=w9mQGjM5TmI
+" target="_blank"><img src="http://img.youtube.com/vi/w9mQGjM5TmI/0.jpg" 
+alt="Bats - Kalman Filter and Hungarian Algorithm" width="240" height="180" border="10" /></a>
         </div></td>
     </tr>
    </table>

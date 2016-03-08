@@ -1,4 +1,4 @@
-<p style="font-size: 120%;"><b>Problem definition</b></p>
+<h2> Problem definition</h2>
 
 <p>
 In previous assignments, we have demonstrated the problems and solutions to identifying and analysing objects, but an important aspect we did not cover was the tracking of those object. In this assignment, we attempted to use various methods to track objects in a video. Using the segmented video, we tracked bats based on their centroids.

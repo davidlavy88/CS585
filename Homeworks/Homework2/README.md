@@ -169,16 +169,6 @@
 <p>Confussion Matrix (Done for the first 3 seconds of each shape):
 <p>Done to a total of 270 frames:
 <p>
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg .tg-oopb{color:#cb0000}
-.tg .tg-wvtg{background-color:#34bdc9}
-.tg .tg-jhgd{background-color:#3186af}
-.tg .tg-rpj7{background-color:#ad6864}
-.tg .tg-698h{background-color:#000000}
-</style>
 <table class="tg">
 <tr>
   <th class="tg-031e">Results\Data</th>

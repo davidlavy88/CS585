@@ -132,43 +132,43 @@
 
 <hr>
 
-   <p style="font-size: 120%;"><b>Results</b></p>   
+<p style="font-size: 120%;"><b>Results</b></p>   
 
-    <table style="width:100%">
-      <caption><b>Table of templates</b></caption>
-     <tr>
-       <th><b>Template 1</b></th>
-       <th><b>Template 2</b></th>
-       <th><b>Template 3</b></th>
-     </tr>
-     <tr>
-       <td><a href="http://i.imgur.com/92E2jjN"><img src="http://i.imgur.com/92E2jjN.png" width="240" height="320" title="Template1" /></a></td>
-       <td><a href="http://i.imgur.com/pOaXgPT"><img src="http://i.imgur.com/pOaXgPT.png" width="240" height="320" title="Template2" /></a></td>
-       <td><a href="http://i.imgur.com/Ouq50Ji"><img src="http://i.imgur.com/Ouq50Ji.png" width="240" height="320" title="Template3" /></a>
-     </tr>
-     <tr>
-       <td><a href="http://i.imgur.com/S9Z1MS5"><img src="http://i.imgur.com/S9Z1MS5.png" width="480" height="360" title="Matching template 1" /></a></td>
-       <td><a href="http://i.imgur.com/xyHFAXy"><img src="http://i.imgur.com/xyHFAXy.png" width="480" height="360" title="Matching template 2" /></a></td>
-       <td><a href="http://i.imgur.com/u2bjDJi"><img src="http://i.imgur.com/u2bjDJi.png" width="480" height="360" title="Matching Template 3" /></a>
-     </tr>
-   </table>
+<table style="width:100%">
+  <caption><b>Table of templates</b></caption>
+ <tr>
+   <th><b>Template 1</b></th>
+   <th><b>Template 2</b></th>
+   <th><b>Template 3</b></th>
+ </tr>
+ <tr>
+   <td><a href="http://i.imgur.com/92E2jjN"><img src="http://i.imgur.com/92E2jjN.png" width="240" height="320" title="Template1" /></a></td>
+   <td><a href="http://i.imgur.com/pOaXgPT"><img src="http://i.imgur.com/pOaXgPT.png" width="240" height="320" title="Template2" /></a></td>
+   <td><a href="http://i.imgur.com/Ouq50Ji"><img src="http://i.imgur.com/Ouq50Ji.png" width="240" height="320" title="Template3" /></a>
+ </tr>
+ <tr>
+   <td><a href="http://i.imgur.com/S9Z1MS5"><img src="http://i.imgur.com/S9Z1MS5.png" width="480" height="360" title="Matching template 1" /></a></td>
+   <td><a href="http://i.imgur.com/xyHFAXy"><img src="http://i.imgur.com/xyHFAXy.png" width="480" height="360" title="Matching template 2" /></a></td>
+   <td><a href="http://i.imgur.com/u2bjDJi"><img src="http://i.imgur.com/u2bjDJi.png" width="480" height="360" title="Matching Template 3" /></a>
+ </tr>
+</table>
 
-   <hr>
+<hr>
 
-   <p style="font-size: 120%;"><b>Discussion</b></p>
+<p style="font-size: 120%;"><b>Discussion</b></p>
 
-   <p>
-     <ul>
-       <li>The strength of our project is how we addressed our template matching. We  think that doing a previous skin detection isolates other features that are irrelevant and this will make the matching easier.</li>
-       <li>Another strength is our program that calculates the HSV parameters in each situation, this is helpful because we can try in almost any situation, and we can be sure that skin detection will be optimized.
-       <li>The weakness is that are not accounting for scale and rotation invariance. A slight move of for example our open hand makes it seem like it is a peace sign, this is confusing.</li>
-       <li>We can improve our method by using a set of downsampled images to account for the scale invariance. For rotation invariance we can use 3D cameras that will also capture depth, this will give us extra information and the shapes will not be mixed as we saw what happened in our algorithm.</li>
-     </ul>
-   </p>
+<p>
+ <ul>
+   <li>The strength of our project is how we addressed our template matching. We  think that doing a previous skin detection isolates other features that are irrelevant and this will make the matching easier.</li>
+   <li>Another strength is our program that calculates the HSV parameters in each situation, this is helpful because we can try in almost any situation, and we can be sure that skin detection will be optimized.
+   <li>The weakness is that are not accounting for scale and rotation invariance. A slight move of for example our open hand makes it seem like it is a peace sign, this is confusing.</li>
+   <li>We can improve our method by using a set of downsampled images to account for the scale invariance. For rotation invariance we can use 3D cameras that will also capture depth, this will give us extra information and the shapes will not be mixed as we saw what happened in our algorithm.</li>
+ </ul>
+</p>
 
-       <p>Confussion Matrix (Done for the first 3 seconds of each shape):
-       <p>Done to a total of 270 frames:
-       <p>
+<p>Confussion Matrix (Done for the first 3 seconds of each shape):
+<p>Done to a total of 270 frames:
+<p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -180,47 +180,47 @@
 .tg .tg-698h{background-color:#000000}
 </style>
 <table class="tg">
-  <tr>
-    <th class="tg-031e">Results\Data</th>
-    <th class="tg-031e">Open Hand</th>
-    <th class="tg-031e">Peace Sign</th>
-    <th class="tg-031e">Spock</th>
-    <th class="tg-rpj7">Overall Classifications</th>
-    <th class="tg-wvtg">Precision</th>
-  </tr>
-  <tr>
-    <td class="tg-031e">Open Hand</td>
-    <td class="tg-oopb">85</td>
-    <td class="tg-oopb">4</td>
-    <td class="tg-oopb">1</td>
-    <td class="tg-rpj7">21</td>
-    <td class="tg-wvtg">94%</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">Peace Sign</td>
-    <td class="tg-oopb">6</td>
-    <td class="tg-oopb">80</td>
-    <td class="tg-oopb">4</td>
-    <td class="tg-rpj7">90</td>
-    <td class="tg-wvtg">89%</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">Spock</td>
-    <td class="tg-oopb">18</td>
-    <td class="tg-oopb">63</td>
-    <td class="tg-oopb">9</td>
-    <td class="tg-rpj7">90</td>
-    <td class="tg-wvtg">10%</td>
-  </tr>
-  <tr>
-    <td class="tg-jhgd">Recall</td>
-    <td class="tg-jhgd">78%</td>
-    <td class="tg-jhgd">54%</td>
-    <td class="tg-jhgd">64%</td>
-    <td class="tg-698h" colspan="2"></td>
-  </tr>
+<tr>
+  <th class="tg-031e">Results\Data</th>
+  <th class="tg-031e">Open Hand</th>
+  <th class="tg-031e">Peace Sign</th>
+  <th class="tg-031e">Spock</th>
+  <th class="tg-rpj7">Overall Classifications</th>
+  <th class="tg-wvtg">Precision</th>
+</tr>
+<tr>
+  <td class="tg-031e">Open Hand</td>
+  <td class="tg-oopb">85</td>
+  <td class="tg-oopb">4</td>
+  <td class="tg-oopb">1</td>
+  <td class="tg-rpj7">21</td>
+  <td class="tg-wvtg">94%</td>
+</tr>
+<tr>
+  <td class="tg-031e">Peace Sign</td>
+  <td class="tg-oopb">6</td>
+  <td class="tg-oopb">80</td>
+  <td class="tg-oopb">4</td>
+  <td class="tg-rpj7">90</td>
+  <td class="tg-wvtg">89%</td>
+</tr>
+<tr>
+  <td class="tg-031e">Spock</td>
+  <td class="tg-oopb">18</td>
+  <td class="tg-oopb">63</td>
+  <td class="tg-oopb">9</td>
+  <td class="tg-rpj7">90</td>
+  <td class="tg-wvtg">10%</td>
+</tr>
+<tr>
+  <td class="tg-jhgd">Recall</td>
+  <td class="tg-jhgd">78%</td>
+  <td class="tg-jhgd">54%</td>
+  <td class="tg-jhgd">64%</td>
+  <td class="tg-698h" colspan="2"></td>
+</tr>
 </table>
-   
+ 
 <hr>
  
 <p style="font-size: 120%;"><b>Conclusions</b></p>

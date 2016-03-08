@@ -61,76 +61,76 @@
 
 <hr>
 
-   <p style="font-size: 120%;"><b>Discussion</b></p>
+<p style="font-size: 120%;"><b>Discussion</b></p>
 
-   <p>
-     <ul>
-       <li>An advantage of our method is the use of NCC which makes our system invariant to lightning and exposure.</li>
-       <li>The weakness is that we aren't accounting for scale and rotation invariance, which makes a different angle for our template make our system 50% of the time find another matching rectangle.</li>
-       <li>We can improve our method by using a set of downsampled images to account for the scale invariance. Also for rotation we can find edges of our stream and verify the direction of potential matchings and rotate them in the same position as our template</li>
-     </ul>
-   </p>
+<p>
+ <ul>
+   <li>An advantage of our method is the use of NCC which makes our system invariant to lightning and exposure.</li>
+   <li>The weakness is that we aren't accounting for scale and rotation invariance, which makes a different angle for our template make our system 50% of the time find another matching rectangle.</li>
+   <li>We can improve our method by using a set of downsampled images to account for the scale invariance. Also for rotation we can find edges of our stream and verify the direction of potential matchings and rotate them in the same position as our template</li>
+ </ul>
+</p>
    
-   <hr>
-     
-   <p style="font-size: 120%;"><b>Conclusions</b></p>
-   <p>This was a good introduction to template-based matching algorithms. Future experiments will involve try different algorithms and verify which one is more efficient.</p>
-   
-   <hr>
+<hr>
+ 
+<p style="font-size: 120%;"><b>Conclusions</b></p>
+<p>This was a good introduction to template-based matching algorithms. Future experiments will involve try different algorithms and verify which one is more efficient.</p>
 
-   <p style="font-size: 120%;"><b>Bibliography</b></p>
-   <p> - http://docs.opencv.org/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
+<hr>
 
-   <hr>
+<p style="font-size: 120%;"><b>Bibliography</b></p>
+<p> - http://docs.opencv.org/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
 
- <p style="font-size: 120%;"><b>Part 2</b></p>
-   <p style="font-size: 120%;"><b>Problem definition</b></p>
+<hr>
 
-       <p>Track an our hand in the video. Also detect 3 shapes and output which is the shape we are making and delineate the shape of the hand. 
-       <p>We are addressing 3 different challenges here. 
-       <p>First we need to perform a skin detection algorithm to isolate only the skin in our video. Then we will do a template matching with this output together with our template, which has been processed with the skin detection as well so we only have skin as a grayscale image and the background will be black. After this we will do 3 different template matching and look at their coefficients. The highest of these 3 coefficients will tell us which shape is the one we are making. Finally, we will copy the code we did in part one to create a rectangle in the matching and using our skin detection image we will delineate the shape and put this contour back in the original stream.
-   <ul>
-     <li>Challenges</li>
-     <ul>
-       <li>Scale variance: Same as in our part 1, scale invariance is a problem we need to address, however we found out that the hand detection will work well in a certain range and it also detects the shape.</li>
-       <li>Rotation invariance: This is a very difficult problem, that we could not address, shapes of the hand are more difficult to find orientation. We read some papers about how to do this that will be mentioned at the end.</li>
-       <li>Background and noise supression: When there is a 'lot of skin' in the background this impacted our system with low performance.</li>
-       <li>Rapid movement of the hand. Usually in our system we have our face and our hands. If the hands move rapidly we will lose track of them, and we found out that the system goes for the face as a potential match. This was improved if we moved our hand slowly.</li>
-     </ul>
-     <li>Assumptions</li>
-     <ul>
-       <li>We assumed that our skin detection varies according to lightning and exposure, this is because when using the same parameters in different environments, there are big blobs in different images. To address this we created a calibration system that will give us the parameters we need for skin detection.</li>
-       <li>Also we tried to mantain a uniform background so it is easier to isolate the sking with our algorithm</li>
-       <li>The object to track in this case will be bounded in a rectangle.</li>
-     </ul>
-     
-   </ul>
+<p style="font-size: 120%;"><b>Part 2</b></p>
+<p style="font-size: 120%;"><b>Problem definition</b></p>
 
-   <hr>
+   <p>Track an our hand in the video. Also detect 3 shapes and output which is the shape we are making and delineate the shape of the hand. 
+   <p>We are addressing 3 different challenges here. 
+   <p>First we need to perform a skin detection algorithm to isolate only the skin in our video. Then we will do a template matching with this output together with our template, which has been processed with the skin detection as well so we only have skin as a grayscale image and the background will be black. After this we will do 3 different template matching and look at their coefficients. The highest of these 3 coefficients will tell us which shape is the one we are making. Finally, we will copy the code we did in part one to create a rectangle in the matching and using our skin detection image we will delineate the shape and put this contour back in the original stream.
+<ul>
+ <li>Challenges</li>
+ <ul>
+   <li>Scale variance: Same as in our part 1, scale invariance is a problem we need to address, however we found out that the hand detection will work well in a certain range and it also detects the shape.</li>
+   <li>Rotation invariance: This is a very difficult problem, that we could not address, shapes of the hand are more difficult to find orientation. We read some papers about how to do this that will be mentioned at the end.</li>
+   <li>Background and noise supression: When there is a 'lot of skin' in the background this impacted our system with low performance.</li>
+   <li>Rapid movement of the hand. Usually in our system we have our face and our hands. If the hands move rapidly we will lose track of them, and we found out that the system goes for the face as a potential match. This was improved if we moved our hand slowly.</li>
+ </ul>
+ <li>Assumptions</li>
+ <ul>
+   <li>We assumed that our skin detection varies according to lightning and exposure, this is because when using the same parameters in different environments, there are big blobs in different images. To address this we created a calibration system that will give us the parameters we need for skin detection.</li>
+   <li>Also we tried to mantain a uniform background so it is easier to isolate the sking with our algorithm</li>
+   <li>The object to track in this case will be bounded in a rectangle.</li>
+ </ul>
+ 
+</ul>
 
-   <p style="font-size: 120%;"><b>Method and Implementation</b></p>
+<hr>
 
-   <p>The method we used here is as we described above. We first take the HSV parameters for skin detection. Later we start streaming images from the webcam, transform these into HSV and apply our skin detection function.This will give us a grayscale image where the grayscale part will only be applied to our skin. We do the same for our templates. 
-   <p>Once this is done we apply our MatchingMethod described in part one, but with a little modification that will be decribed below. This function will give us the coefficient of the template matching which will be compared between the three of these matchings and finally the one that's the biggest will determine what shape is being used.
-   <p>Finally we will use the rectangle from our MatchingMethod function and extract the contour of this which will be our hand shape. 
+<p style="font-size: 120%;"><b>Method and Implementation</b></p>
 
-   <p>For this task we created a separate function called skinHSV which we can perform a manual skin detection calibration by determining the HSV min and max parameters that later will be used in our main program. 
-   <p>In our main program we have the function mySkinDetect that was done in class, but this was modified for our method using HSV parameters. And it will output a grayscale image.
-   <p>My MatchingMethod function has been modified by outputting the matching rectangle where we will draw our contour and this contour later will be drawn in the streaming image. Also it outputs the maximum coefficient of the matrix given by the matchTemplate OpenCV function.
-   <p>Finally a function called myMaxD will give us the maximum coefficient of the three we got from doing MatchingMethod.
+<p>The method we used here is as we described above. We first take the HSV parameters for skin detection. Later we start streaming images from the webcam, transform these into HSV and apply our skin detection function.This will give us a grayscale image where the grayscale part will only be applied to our skin. We do the same for our templates. 
+<p>Once this is done we apply our MatchingMethod described in part one, but with a little modification that will be decribed below. This function will give us the coefficient of the template matching which will be compared between the three of these matchings and finally the one that's the biggest will determine what shape is being used.
+<p>Finally we will use the rectangle from our MatchingMethod function and extract the contour of this which will be our hand shape. 
 
-   <hr>
+<p>For this task we created a separate function called skinHSV which we can perform a manual skin detection calibration by determining the HSV min and max parameters that later will be used in our main program. 
+<p>In our main program we have the function mySkinDetect that was done in class, but this was modified for our method using HSV parameters. And it will output a grayscale image.
+<p>My MatchingMethod function has been modified by outputting the matching rectangle where we will draw our contour and this contour later will be drawn in the streaming image. Also it outputs the maximum coefficient of the matrix given by the matchTemplate OpenCV function.
+<p>Finally a function called myMaxD will give us the maximum coefficient of the three we got from doing MatchingMethod.
 
-   <p style="font-size: 120%;"><b>Experiments</b></p>
-   <p>For this second part we took many different templates, we tried our algorithm with three main shapes which are: Open Hand, Peace sign and Spock ('live long and prosper'). However it is important to point that we used other templates as well (Right point, left point, up point, fist, etc). Then we carried our experiments in many different scenarios, with people in it, dark background, light background. Also we performed many different offline and online experiments. Specially in my case, my light bulbs at home are not really powerful and this created a very dark image that was really difficult to perform my skin detection. </p>
+<hr>
 
-   <p>Metrics
-     <ul>
-       <li>Detection rate: This was about 67%. The tracking of the first two shapes worked pretty good, but the third one we had problems because the matching was not done properly. After debugging our algorithm we could not find what was the cause of this problem.</li>
-       <li>Running time: This running time was more extense and we used videos of length about 45 - 60 seconds trying different shapes over and over again.</li>
-     </ul>   
+<p style="font-size: 120%;"><b>Experiments</b></p>
+<p>For this second part we took many different templates, we tried our algorithm with three main shapes which are: Open Hand, Peace sign and Spock ('live long and prosper'). However it is important to point that we used other templates as well (Right point, left point, up point, fist, etc). Then we carried our experiments in many different scenarios, with people in it, dark background, light background. Also we performed many different offline and online experiments. Specially in my case, my light bulbs at home are not really powerful and this created a very dark image that was really difficult to perform my skin detection. </p>
 
-   <hr>
+<p>Metrics
+ <ul>
+   <li>Detection rate: This was about 67%. The tracking of the first two shapes worked pretty good, but the third one we had problems because the matching was not done properly. After debugging our algorithm we could not find what was the cause of this problem.</li>
+   <li>Running time: This running time was more extense and we used videos of length about 45 - 60 seconds trying different shapes over and over again.</li>
+ </ul>   
+
+<hr>
 
    <p style="font-size: 120%;"><b>Results</b></p>   
 

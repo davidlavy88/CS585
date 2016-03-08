@@ -49,12 +49,12 @@ href="http://docs.opencv.org/doc/user_guide/ug_mat.html#primitive-operations">li
 
 <hr>
 
-To compile the program using CMake, do the following: 
+To compile the program using CMake, do the following:  </br>
 
-$ cd <hw1_directory>
-$ cmake .
-$ make
+$ cd <hw1_directory> </br>
+$ cmake . </br>
+$ make </br>
 
-This will generate an executable which can be run by:
+This will generate an executable which can be run by: </br>
 
-$ ./playImages
+$ ./playImages </br>

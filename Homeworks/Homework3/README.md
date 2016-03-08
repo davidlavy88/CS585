@@ -514,45 +514,45 @@ alt="Cells Iterative Threshold" width="240" height="180" border="10" /></a>
      </tr>
    </table>
 
-        <hr>
-    <h2> Discussion </h2>
-    
-    <p>
-    Our methods proved very successful for Bats and Cells. The aquarium data set proved challenging due to the diversity of objects to be identified, the small size of objects, and many moving objects in the background. It was interesting that segmentation algorithm coices are project-dependant.
-    </p>
-    <p>
+<hr>
+<h2> Discussion </h2>
+
+<p>
+Our methods proved very successful for Bats and Cells. The aquarium data set proved challenging due to the diversity of objects to be identified, the small size of objects, and many moving objects in the background. It was interesting that segmentation algorithm coices are project-dependant.
+</p>
+<p>
 An interesting observation is that we created a "rainbow" effect when labelling components. Although we tried to conserve color, if the algorithm detected a different object first, they would switch color. For data sets with a large number of components or fast-moving objects, colors would appear to be strobing.
-    </p>
-    <p>
-    A significant problem we encountered occurred with the aquarium data set. The results contained many small fish and lots of noise. We tried to reduce the noise by eroding then dilating, but this left us with boxes instead of fish. Fish would be eroded down to a single pixel, and the squares that resulted from dilating did not approximate the fish well. The small size of the fish and the sheer number of fish proved a problem.
-    </p>
-    <p>
-    Another problem came from using iterative threshold on the cell dataset. There was not much color variation, so the iterative threshold did not give us a good result.
-    </p>
-    <hr>
-    <h2> Conclusions </h2>
-    
-    <p>
-    We had strong results, leading to the conclusion that segmentation methods of iterative and adaptive thresholding are highly useful, with the caveat that iterative thresholding should not be used on data sets that are close-to-uniformly-colored. The weaknesses were that these methods aren't necessarily robust; for each dataset, we needed to tailor a solution to "fix" the data. Eroding and dilating were very useful, except in the aquarium dataset. An improvement would be to find a way to lower the number of fish in the aquarium dataset.
-    </p>
-    
-    
-    <hr>
-    <h2> Credits and Bibliography </h2>
-  <!--
-  <p>
-    
-    OpenCV template matching: <a href="http://docs.opencv.org/doc/tutorials/imgproc/histograms/template_matching/template_matching.html">http://docs.opencv.org/doc/tutorials/imgproc/his
-        tograms/template_matching/template_matching.html</a> 9/23/15
-     
-    </p>
-   -->
-  <p>
-  OpenCV statistics: http://docs.opencv.org/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html?highlight=findcontours#findcontours <a href="http://docs.opencv.org/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html?highlight=findcontours#findcontours">  </a>10/7/15
-  </p>
-  <p>
-  Segmentation methods and connected components algorithm taught in-class by Margrit Betke
-  </p>
-    <p>
-    Partners: Sean Smith, Sean Matuszak
-    </p>
+</p>
+<p>
+A significant problem we encountered occurred with the aquarium data set. The results contained many small fish and lots of noise. We tried to reduce the noise by eroding then dilating, but this left us with boxes instead of fish. Fish would be eroded down to a single pixel, and the squares that resulted from dilating did not approximate the fish well. The small size of the fish and the sheer number of fish proved a problem.
+</p>
+<p>
+Another problem came from using iterative threshold on the cell dataset. There was not much color variation, so the iterative threshold did not give us a good result.
+</p>
+<hr>
+<h2> Conclusions </h2>
+
+<p>
+We had strong results, leading to the conclusion that segmentation methods of iterative and adaptive thresholding are highly useful, with the caveat that iterative thresholding should not be used on data sets that are close-to-uniformly-colored. The weaknesses were that these methods aren't necessarily robust; for each dataset, we needed to tailor a solution to "fix" the data. Eroding and dilating were very useful, except in the aquarium dataset. An improvement would be to find a way to lower the number of fish in the aquarium dataset.
+</p>
+
+
+<hr>
+<h2> Credits and Bibliography </h2>
+<!--
+<p>
+
+OpenCV template matching: <a href="http://docs.opencv.org/doc/tutorials/imgproc/histograms/template_matching/template_matching.html">http://docs.opencv.org/doc/tutorials/imgproc/his
+    tograms/template_matching/template_matching.html</a> 9/23/15
+ 
+</p>
+-->
+<p>
+OpenCV statistics: http://docs.opencv.org/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html?highlight=findcontours#findcontours <a href="http://docs.opencv.org/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html?highlight=findcontours#findcontours">  </a>10/7/15
+</p>
+<p>
+Segmentation methods and connected components algorithm taught in-class by Margrit Betke
+</p>
+<p>
+Partners: Sean Smith, Sean Matuszak
+</p>

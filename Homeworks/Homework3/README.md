@@ -18,84 +18,84 @@
  
 </ul>
     
-    <hr>
+<hr>
     
-    <h2> Method and Implementation </h2>
+<h2> Method and Implementation </h2>
 
 <p>For all data sets, we used two segmentation methods: iterative threshold and adaptive threshold. We implemented our own connected components algorithm quasi-recursively using a stack.  After all this we tailored each program to the dataset. For the aquarium, we didn't change the output (see discussion for explanation). For the bat dataset, we eroded to reduce single-pixel objects. For cells, we ran into an interesting problem; cells were being broken into many small components. To fix this, we dialted several times to fuse these components into one object, then eroded to approximate the cell.
 For all data sets, statistics were generated for each object in the image and saved to a .csv file at runtime using opencv functions.
 </p>
     
     
-    <hr>
-    <h2>Experiments</h2>
-    <p>
-    This problem was difficult to run experiments with. Most of our decisions were subjectively determined within the group as to what best approximated our given video.
-    </p>
+<hr>
+<h2>Experiments</h2>
+<p>
+This problem was difficult to run experiments with. Most of our decisions were subjectively determined within the group as to what best approximated our given video.
+</p>
     
-    
-    <hr>
-    <h2> Results</h2>
 
-    <table style="width:100%">
-      <caption><b>Table of templates</b></caption>
-     <tr>
-       <th><b>Original</b></th>
-       <th><b>Adaptive Threshold</b></th>
-       <th><b>Iterative Threshold</b></th>
-     </tr>
-     <tr>
-       <td><div align="center">
+<hr>
+<h2> Results</h2>
+
+<table style="width:100%">
+  <caption><b>Table of templates</b></caption>
+ <tr>
+   <th><b>Original</b></th>
+   <th><b>Adaptive Threshold</b></th>
+   <th><b>Iterative Threshold</b></th>
+ </tr>
+ <tr>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=dMMPcqAKGGw
 " target="_blank"><img src="http://img.youtube.com/vi/dMMPcqAKGGw/0.jpg" 
 alt="Aquarium Original" width="240" height="180" border="10" /></a>
- </div></td>
-       <td><div align="center">
+</div></td>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=3mJvyBN0b5k
 " target="_blank"><img src="http://img.youtube.com/vi/3mJvyBN0b5k/0.jpg" 
 alt="Aquarium Adaptive Threshold" width="240" height="180" border="10" /></a>
- </div></td>
-       <td><div align="center">
+</div></td>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=ZAAEebXXsN8
 " target="_blank"><img src="http://img.youtube.com/vi/ZAAEebXXsN8/0.jpg" 
 alt="Aquarium Iterative Threshold" width="240" height="180" border="10" /></a>
- </div></td>
-     </tr>
-     <tr>
-       <td><div align="center">
+</div></td>
+ </tr>
+ <tr>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=n9pcr9bG8cs
 " target="_blank"><img src="http://img.youtube.com/vi/n9pcr9bG8cs/0.jpg" 
 alt="Bats Original" width="240" height="180" border="10" /></a>
- </div></td>
-       <td><div align="center">
+</div></td>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=AwiPaXH-kNw
 " target="_blank"><img src="http://img.youtube.com/vi/AwiPaXH-kNw/0.jpg" 
 alt="Bats Adaptive Threshold" width="240" height="180" border="10" /></a>
- </div></td>
-       <td><div align="center">
+</div></td>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=K3jvCzhRlKU
 " target="_blank"><img src="http://img.youtube.com/vi/K3jvCzhRlKU/0.jpg" 
 alt="Bats Iterative Threshold" width="240" height="180" border="10" /></a>
- </div></a></td>
-     </tr>
-     <tr>
-       <td><div align="center">
+</div></a></td>
+ </tr>
+ <tr>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Cfyuqb2gTIQ
 " target="_blank"><img src="http://img.youtube.com/vi/Cfyuqb2gTIQ/0.jpg" 
 alt="Cells Original" width="240" height="180" border="10" /></a>
- </div></td>
-       <td><div align="center">
+</div></td>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=-R-VF0qM3n4
 " target="_blank"><img src="http://img.youtube.com/vi/-R-VF0qM3n4/0.jpg" 
 alt="Cells Adaptive Threshold" width="240" height="180" border="10" /></a>
- </div></td>
-       <td><div align="center">
+</div></td>
+   <td><div align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=bdpSZiMov4Q
 " target="_blank"><img src="http://img.youtube.com/vi/bdpSZiMov4Q/0.jpg" 
 alt="Cells Iterative Threshold" width="240" height="180" border="10" /></a>
- </div></a></td>
-     </tr>
-   </table>
+</div></a></td>
+ </tr>
+</table>
 
    <p>
    <table style="width:100%">

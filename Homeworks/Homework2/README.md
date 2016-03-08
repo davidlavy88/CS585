@@ -1,4 +1,5 @@
-<p style="font-size: 120%;"><b>Problem definition</b></p>
+<h1>Part 1</h1>
+<h2>Problem definition</h2>
 
 <p>Track an object in a video. This will be performed by using a picture of the isolated object and use it as a template. Then using a webcam the user will hold the object and the program will draw a bounding box where the template matching algorithm finds the object.
 <ul>
@@ -19,7 +20,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Method and Implementation</b></p>
+<h2>Method and Implementation</h2>
 
 <p>The method we used here is simple. A call of the matchTemplate function in OpenCV. To do this first we stream our webcam (or a video previously recorded) together with a template we will like to use. In our experiment we took a picture holding a card and then crop it. This will be our template for tracking. Then we call our function MatchingMethod and show the rectangle where our template is located. The function is described below.
 
@@ -27,7 +28,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Experiments</b></p>
+<h2>Experiments</h2>
 <p>For this first part we took the image of a Charlie card. We did this procedure offline and online. As this part was relatively simple the tracking was done just once. But is important to highlight that we tried this setting in 3 different locations at 3 rooms illuminated differently.</p>
 
 <p>Metrics
@@ -38,7 +39,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Results</b></p>   
+<h2>Results</h2>   
 
 <table style="width:100%">
  <caption><b>Results</b></caption>
@@ -61,7 +62,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Discussion</b></p>
+<h2>Discussion</h2>
 
 <p>
  <ul>
@@ -73,18 +74,18 @@
    
 <hr>
  
-<p style="font-size: 120%;"><b>Conclusions</b></p>
+<h2>Conclusions</h2>
 <p>This was a good introduction to template-based matching algorithms. Future experiments will involve try different algorithms and verify which one is more efficient.</p>
 
 <hr>
 
-<p style="font-size: 120%;"><b>Bibliography</b></p>
+<h2>Bibliography</h2>
 <p> - http://docs.opencv.org/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
 
 <hr>
 
-<p style="font-size: 120%;"><b>Part 2</b></p>
-<p style="font-size: 120%;"><b>Problem definition</b></p>
+<h1>Part 2</h1>
+<h2>Problem definition</h2>
 
    <p>Track an our hand in the video. Also detect 3 shapes and output which is the shape we are making and delineate the shape of the hand. 
    <p>We are addressing 3 different challenges here. 
@@ -108,7 +109,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Method and Implementation</b></p>
+<h2>Method and Implementation</h2>
 
 <p>The method we used here is as we described above. We first take the HSV parameters for skin detection. Later we start streaming images from the webcam, transform these into HSV and apply our skin detection function.This will give us a grayscale image where the grayscale part will only be applied to our skin. We do the same for our templates. 
 <p>Once this is done we apply our MatchingMethod described in part one, but with a little modification that will be decribed below. This function will give us the coefficient of the template matching which will be compared between the three of these matchings and finally the one that's the biggest will determine what shape is being used.
@@ -121,7 +122,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Experiments</b></p>
+<h2>Experiments</h2>
 <p>For this second part we took many different templates, we tried our algorithm with three main shapes which are: Open Hand, Peace sign and Spock ('live long and prosper'). However it is important to point that we used other templates as well (Right point, left point, up point, fist, etc). Then we carried our experiments in many different scenarios, with people in it, dark background, light background. Also we performed many different offline and online experiments. Specially in my case, my light bulbs at home are not really powerful and this created a very dark image that was really difficult to perform my skin detection. </p>
 
 <p>Metrics
@@ -132,7 +133,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Results</b></p>   
+<h2>Results</h2>   
 
 <table style="width:100%">
   <caption><b>Table of templates</b></caption>
@@ -155,7 +156,7 @@
 
 <hr>
 
-<p style="font-size: 120%;"><b>Discussion</b></p>
+<h2>Discussion</h2>
 
 <p>
  <ul>
@@ -213,12 +214,12 @@
  
 <hr>
  
-<p style="font-size: 120%;"><b>Conclusions</b></p>
+<h2>Conclusions</h2>
 <p>This was a very challenging project. Many different methods were tried, a lot of errors were made, but overall it was good learning in how we can do shape detection. I hope to improve this version and make it work with the 3D points I mentioned above using a Kinect.</p>
 
 <hr>
 
-<p style="font-size: 120%;"><b>Bibliography</b></p>
+<h2>Bibliography</h2>
 <p> - http://docs.opencv.org/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
 
 <hr>

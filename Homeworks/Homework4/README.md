@@ -48,7 +48,7 @@ Our initial experiment involved tracking the bats with greedy/alpha-beta, follow
     </tr>
     <tr>
         <td><div align="center">
-[![Drone Autonomously Avoiding Obstacles at 30 MPH](http://img.youtube.com/vi/_qah8oIzCwk/0.jpg)](https://www.youtube.com/watch?v=_qah8oIzCwk)
+[(http://img.youtube.com/vi/_qah8oIzCwk/0.jpg)](https://www.youtube.com/watch?v=_qah8oIzCwk)
         </div></td>
         <td><div align="center">
 <iframe width="420" height="315" src="https://www.youtube.com/embed/6lQ9wC0grC0" frameborder="0" allowfullscreen></iframe>

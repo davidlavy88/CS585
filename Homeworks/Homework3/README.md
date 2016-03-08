@@ -1,22 +1,22 @@
 <p style="font-size: 120%;"><b>Problem definition</b></p>  
 
 <p>Detecting and analysing objects is an important part of computer vision. We set out to detect certain objects in videos, detect connected components, lower the number of components, and perform statistics on these components. We did this for 3 sets of videos: an aquarium, cells, and bats.</p>
+<ul>
+    <li>Challenges</li>
     <ul>
-        <li>Challenges</li>
-        <ul>
-            <li>Aquarium: This set of images was the most challenging one. This is because there exists multiple objects moving (big fish, small fish, seaweed). Also the reflection of the light and the pumped oxigen in the top right corner is deceiving to our algorithm, as we're trying to track the fish, but also the moving seaweed gets tracked. Another thing to notice is that small movement of the fish, and sometimes only just a part of their body moving as well as occlusion  makes the tracking difficult.</li>
-            <li>Bats: The bats images weren't too difficult, except that we needed to come up with a good tracking algorithm for the lower part of the image where the brightness is too much that it gets mixed with the grayscale colors of the bats. Our first approach using iterative threshold wasn't as effective as the others as it is shown in our results.</li>
-            <li>Cells: The cells images showed some difficult due to the existence of bright pixels around each cell, while having darker image regions. By using a classic threshold approach would either only get boundaries (that aren't continuous) or mixed the inside of the cell with the whole background.</li>
-            <li>In terms of code implementation, challenges arised when creating our video, as this was hard in a Windows machine, but fairly easy in a Linux machine. Another challenge was the implementation of our connected components code, due to time constrains we weren't able to develop an efficient piece of code for this (although our algorithm ran fairly well and fast).</li>
-        </ul>
-        <li>Assumptions</li>
-        <ul>
-            <li>Aquarium: We will make our system lightning invariant by only using our value channel from the HSV space, and consider small isolated motion pixels as fish, due to the fact that using and erode and dilation step gets rid of a lot of the fish in the images.</li>
-            <li>Bats: We will be using the grayscale images and because our algorithm worked fairly well (e.g. no considerable noise) we assumed that all the blobs we got are bats.</li>
-            <li>Cells: We made the assumption that when getting our contour of the cells, because of the bright values around them we get stripes that they don't connect, our assumption was that if these stripes are close enough they belong to the same boundary of the cell and therefore by using morphological operations we can get the whole contour and shape of the cell.</li>
-        </ul>
-     
-   </ul>
+        <li>Aquarium: This set of images was the most challenging one. This is because there exists multiple objects moving (big fish, small fish, seaweed). Also the reflection of the light and the pumped oxigen in the top right corner is deceiving to our algorithm, as we're trying to track the fish, but also the moving seaweed gets tracked. Another thing to notice is that small movement of the fish, and sometimes only just a part of their body moving as well as occlusion  makes the tracking difficult.</li>
+        <li>Bats: The bats images weren't too difficult, except that we needed to come up with a good tracking algorithm for the lower part of the image where the brightness is too much that it gets mixed with the grayscale colors of the bats. Our first approach using iterative threshold wasn't as effective as the others as it is shown in our results.</li>
+        <li>Cells: The cells images showed some difficult due to the existence of bright pixels around each cell, while having darker image regions. By using a classic threshold approach would either only get boundaries (that aren't continuous) or mixed the inside of the cell with the whole background.</li>
+        <li>In terms of code implementation, challenges arised when creating our video, as this was hard in a Windows machine, but fairly easy in a Linux machine. Another challenge was the implementation of our connected components code, due to time constrains we weren't able to develop an efficient piece of code for this (although our algorithm ran fairly well and fast).</li>
+    </ul>
+    <li>Assumptions</li>
+    <ul>
+        <li>Aquarium: We will make our system lightning invariant by only using our value channel from the HSV space, and consider small isolated motion pixels as fish, due to the fact that using and erode and dilation step gets rid of a lot of the fish in the images.</li>
+        <li>Bats: We will be using the grayscale images and because our algorithm worked fairly well (e.g. no considerable noise) we assumed that all the blobs we got are bats.</li>
+        <li>Cells: We made the assumption that when getting our contour of the cells, because of the bright values around them we get stripes that they don't connect, our assumption was that if these stripes are close enough they belong to the same boundary of the cell and therefore by using morphological operations we can get the whole contour and shape of the cell.</li>
+    </ul>
+ 
+</ul>
     
     <hr>
     
